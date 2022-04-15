@@ -1,4 +1,6 @@
+import http from "http";
 import express from "express";
+import webSocket from "ws";
 
 const app = express();
 
@@ -10,7 +12,30 @@ app.use("/public", express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => res.render("home"));
 
-const handleListen = ()=>{
-  console.log("success port 3000")
-}
-app.listen(3000,handleListen);
+const handleListen = () => {
+	console.log("success port 3001");
+};
+
+const sockets = [];
+
+const server = http.createServer(app);
+const wss = new webSocket.Server({server});
+
+wss.on("connection", (socket) => {
+	sockets.push(socket);
+	socket["nickname"] = "Anon";
+
+	socket.on("message", (message) => {
+		const msg = JSON.parse(message);
+
+		if (msg.type === "new_message") {
+			sockets.forEach((aSocket) => {
+				aSocket.send(`${socket.nickname}: ${msg.payload}`);
+			});
+		} else {
+			socket["nickname"] = msg.payload;
+		}
+	});
+});
+
+server.listen(3001, handleListen);
