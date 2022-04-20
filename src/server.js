@@ -1,5 +1,6 @@
 import http from "http";
-import {Server} from "socket.io";
+// import {Server} from "socket.io";
+import SocketIO from "socket.io";
 import express from "express";
 import {instrument} from "@socket.io/admin-ui";
 
@@ -12,15 +13,16 @@ app.get("/", (_, res) => res.render("home"));
 app.get("/*", (_, res) => res.redirect("/"));
 
 const httpServer = http.createServer(app);
-const wsServer = new Server(httpServer, {
-	cors: {
-		origin: ["https://admin.socket.io"],
-		credentials: true,
-	},
-});
-instrument(wsServer, {
-  auth: false,
-});
+const wsServer = SocketIO(httpServer);
+// const wsServer = new Server(httpServer, {
+// 	cors: {
+// 		origin: ["https://admin.socket.io"],
+// 		credentials: true,
+// 	},
+// });
+// instrument(wsServer, {
+//   auth: false,
+// });
 
 wsServer.on("connection", (socket) => {
   socket.on("join_room", (roomName,callback) => {
@@ -29,9 +31,11 @@ wsServer.on("connection", (socket) => {
     socket.to(roomName).emit("welcome");
   });
   socket.on("offer",(offer,roomName)=>{
-    socket.to(roomName).emit("offer",offer)
+    console.log("offer");
+    socket.to(roomName).emit("offer",offer);
   })
   socket.on("answer",(answer,roomName)=>{
+    console.log("answer")
     socket.to(roomName).emit("answer",answer)
   })
 });
