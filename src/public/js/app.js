@@ -108,7 +108,7 @@ async function handleWelcomeSubmit(event) {
   input.value = "";
   await initCall();
   // SEQ: first1, second1
-  socket.emit("join_room", input.value,()=>{
+  socket.emit("join_room", roomName,()=>{
     alert(`${roomName}방으로 환영합니다.`);
     title.innerText = `Room: ${roomName}`;
   }); 
@@ -132,16 +132,15 @@ socket.on("offer", async (offer) => {
   myPeerConnection.setRemoteDescription(offer);
   const answer = await myPeerConnection.createAnswer();
   myPeerConnection.setLocalDescription(answer);
-  socket.emit("answer",answer,roomName);
-  
+  socket.emit("answer", answer, roomName);
+  console.log("sent the answer");
 })
 
 // SEQ: first4
-socket.on("answer",answer => {
+socket.on("answer", answer => {
+  console.log("received the answer");
   myPeerConnection.setRemoteDescription(answer);
-  console.log("connected");
 })
-
 
 
 // RTC Code
