@@ -5,20 +5,30 @@ html(lang="en")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Zoom
-        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+        link(rel="stylesheet", href="/public/style.css")
     body
-        h1 Zoom
-        p#title    
-        section
-            div#welcome
+        header 
+            h1 👤 ZOOM 👤
+            h2#title
+        section#welcome
                 form    
                     input(placeholder="room name", required, type="text", value="123")
                     button Enter room
+        section
             div#call
-                div#myStream
-                    video#myFace(autoplay,playsinline, width="400", height="400")
-                    button#mute Mute
-                    button#camera Turn Camera Off
-                    select#cameras
+                div#myStream.verticle
+                    nav 
+                        button#mute 🔇
+                        button#camera 🎥 ❌
+                        select#cameras
+                    video#myFace(autoplay,playsinline, width="300")
+                div#yourStream.verticle
+                    nav 
+                        button#mute 🔇
+                        button#camera 🎥 ❌
+                        select#cameras
+                    video#yourFace(autoplay,playsinline, width="300")
+        
+                    
         script(src="/socket.io/socket.io.js") 
         script(src="/public/js/app.js") 
