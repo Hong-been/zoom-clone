@@ -22,12 +22,8 @@ html(lang="en")
                         button#camera 🎥 ❌
                         select#cameras
                     video#myFace(autoplay,playsinline, width="300")
-                div#yourStream.verticle
-                    nav 
-                        button#mute 🔇
-                        button#camera 🎥 ❌
-                        select#cameras
-                    video#yourFace(autoplay,playsinline, width="300")
+                div#peerStream.verticle
+                    video#peerFace(autoplay,playsinline, width="300")
         
                     
         script(src="/socket.io/socket.io.js") 

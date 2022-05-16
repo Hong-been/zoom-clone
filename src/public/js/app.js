@@ -1,6 +1,8 @@
 const socket = io();
 
 const myFace = document.getElementById("myFace");
+const peerFace = document.getElementById("peerFace");
+
 const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const camerasSelect = document.getElementById("cameras");
@@ -109,7 +111,7 @@ async function handleWelcomeSubmit(event) {
 	await initCall();
 	// SEQ: first1, second1
 	socket.emit("join_room", roomName, () => {
-		alert(`${roomName}방으로 환영합니다.`);
+		// alert(`${roomName}방으로 환영합니다.`);
 		title.innerText = `ROOM ${roomName}`;
 	});
 }
@@ -151,6 +153,7 @@ socket.on("ice", (ice) => {
 function makeConnection() {
 	myPeerConnection = new RTCPeerConnection();
 	myPeerConnection.addEventListener("icecandidate", handleIce);
+	myPeerConnection.addEventListener("addstream", handleAddStream);
 	myStream
 		.getTracks()
 		.forEach((track) => myPeerConnection.addTrack(track, myStream));
@@ -158,5 +161,12 @@ function makeConnection() {
 
 function handleIce(data) {
 	socket.emit("ice", data.candidate, roomName);
-	console.log("ice candidate~~~~~~~~~");
+	console.log("아이스 주기");
+}
+
+function handleAddStream(data) {
+	console.log("애드 스트림~~~");
+	const peerStream = data.stream;
+	console.log(myStream, peerStream);
+	peerFace.srcObject = peerStream;
 }
