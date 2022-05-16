@@ -1,17 +1,20 @@
 const socket = io();
 
-const myFace = document.getElementById("myFace");
-const peerFace = document.getElementById("peerFace");
+const call = document.getElementById("call");
+const title = document.getElementById("title");
 
+const peerFace = document.getElementById("peerFace");
+const peerMuteBtn = document.getElementById("peerMute");
+
+const myFace = document.getElementById("myFace");
 const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const camerasSelect = document.getElementById("cameras");
-const call = document.getElementById("call");
-const title = document.getElementById("title");
 
 call.hidden = true;
 
 let myStream;
+let peerStream;
 let myPeerConnection;
 let muted = false;
 let cameraOff = false;
@@ -70,6 +73,20 @@ function handleMuteClick() {
 		muted = false;
 	}
 }
+
+function handlePeerMuteClick() {
+	peerStream
+		.getAudioTracks()
+		.forEach((track) => (track.enabled = !track.enabled));
+	if (!muted) {
+		peerMuteBtn.innerText = "🔈";
+		muted = true;
+	} else {
+		peerMuteBtn.innerText = "🔇";
+		muted = false;
+	}
+}
+
 function handleCameraClick() {
 	myStream
 		.getVideoTracks()
@@ -88,6 +105,7 @@ async function handleCameraChange() {
 }
 
 muteBtn.addEventListener("click", handleMuteClick);
+peerMuteBtn.addEventListener("click", handlePeerMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
 camerasSelect.addEventListener("input", handleCameraChange);
 
@@ -166,7 +184,7 @@ function handleIce(data) {
 
 function handleAddStream(data) {
 	console.log("애드 스트림~~~");
-	const peerStream = data.stream;
+	peerStream = data.stream;
 	console.log(myStream, peerStream);
 	peerFace.srcObject = peerStream;
 }

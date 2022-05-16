@@ -23,8 +23,9 @@ html(lang="en")
                         select#cameras
                     video#myFace(autoplay,playsinline, width="300")
                 div#peerStream.verticle
+                    nav 
+                        button#peerMute 🔇
                     video#peerFace(autoplay,playsinline, width="300")
         
-                    
         script(src="/socket.io/socket.io.js") 
         script(src="/public/js/app.js") 
